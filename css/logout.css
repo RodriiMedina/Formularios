@@ -1,0 +1,35 @@
+.btn-logout {
+
+    font-family: Arial, sans-serif !important;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+
+    /* Alineación interna (El truco para que no se estire) */
+    display: flex !important;
+    flex-direction: row !important; /* Asegura que icono y texto estén a la par */
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px;
+    
+    /* Dimensiones (El 'fit-content' es clave) */
+    width: auto !important;
+    width: fit-content !important;
+    white-space: nowrap !important; /* Evita que las letras se separen */
+    
+    /* Estética */
+    padding: 10px 18px;
+    background-color: #fce8e6;
+    color: #d93025;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn-logout:hover {
+    transform: scale(1.05); /* Un pequeño efecto al pasar el mouse */
+    background-color: #f9d7d5;
+}

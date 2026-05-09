@@ -1,0 +1,31 @@
+@keyframes slideDown {
+    from { transform: translate(-50%, -100%); opacity: 0; }
+    to { transform: translate(-50%, 0); opacity: 1; }
+}
+.toast-success {
+    position: fixed;
+    top: -100px; /* Empieza fuera de la pantalla */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2e7d32; /* Verde bosque elegante */
+    color: white;
+    padding: 16px 32px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10000;
+    font-weight: 500;
+    transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Animación con rebote */
+}
+
+/* Clase que activaremos con JS */
+.toast-success.show {
+    top: 30px; /* Baja a su posición visible */
+}
+
+/* El icono de check */
+.toast-icon {
+    font-size: 24px;
+}

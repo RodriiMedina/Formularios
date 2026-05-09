@@ -1,0 +1,165 @@
+/* Variables de color para mantener la consistencia */
+:root {
+    --primary-color: #673ab7; /* Morado Google Forms */
+    --bg-color: #f0ebf8;
+    --text-color: #202124;
+    --border-color: #dadce0;
+    --white: #ffffff;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Roboto', 'Segoe UI', Tahoma, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--text-color);
+}
+
+.editor-container {
+    max-width: 770px; /* Ancho estándar de formularios */
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Header del Editor */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+header a {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Estilo de las "Tarjetas" */
+.form-header, .pregunta-card {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* La tarjeta del título tiene un borde superior más grueso */
+.form-header {
+    border-top: 10px solid var(--primary-color);
+}
+
+/* Inputs y Textareas */
+input[type="text"], 
+textarea, 
+select {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 0;
+    margin-bottom: 15px;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, 
+textarea:focus {
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.form-header input {
+    font-size: 32px; /* Título más grande */
+    font-weight: 400;
+}
+
+.form-header textarea {
+    font-size: 14px;
+    resize: none;
+}
+
+/* Preguntas */
+.pregunta-card {
+    transition: box-shadow 0.3s;
+}
+
+.pregunta-card:hover {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.pregunta-card select {
+    width: auto;
+    background: #f8f9fa;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Botón Guardar */
+.btn-guardar {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    float: right;
+    margin-top: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    transition: background 0.2s;
+}
+
+.btn-guardar:hover {
+    background-color: #512da8;
+}
+
+/* Limpiar el float */
+.editor-container::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.back-link {
+    /* 1. Posicionamiento absoluto para mandarlo a la esquina[cite: 4] */
+    position: absolute; 
+    top: 40px;   /* Ajustá para subir/bajar en Y[cite: 4] */
+    left: 40px;  /* Ajustá para mover en X[cite: 4] */
+    margin: 00;   /* Limpiamos márgenes que puedan molestar */
+}
+
+.back-link a {
+    /* Tus estilos actuales */
+    text-decoration: none;
+    color: #5f6368;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    /* 2. Para que tenga la forma de "caja gris" de tu dibujo[cite: 4] */
+    padding: 6px 12px;
+    background-color: #f1f3f4;
+    box-shadow: var(--sombra);
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 13px;
+    transition: all 0.2s;
+}
+
+.back-link a:hover {
+    background-color: #e8eaed;
+    color: #202124;
+}

@@ -1,0 +1,79 @@
+
+body { 
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+    color: #333; 
+    background: #e9ecef; 
+    margin: 0; 
+    padding: 20px; 
+}        
+        /* Contenedor tipo "Hoja" */
+       .hoja-pdf { 
+    background: white; 
+    max-width: 850px; 
+    margin: 0 auto; 
+    padding: 50px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    border-radius: 8px;
+}
+
+.header-reporte h1 { 
+    font-size: 24px; 
+    color: #1d6f42; 
+    text-align: center; 
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.header-reporte h2 {
+    font-size: 18px;
+    text-align: center;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.descripcion-texto {
+    text-align: justify;       /* Bordes rectos y limpios */
+    line-height: 1.6;          /* Espacio entre líneas para que no esté comprimido */
+    font-size: 16px;           /* Tamaño estándar de lectura */
+    color: #444;
+    margin: 25px 0;
+    padding: 20px;
+    background: #f8f9fa;       /* Un fondo gris muy sutil para destacar la causa */
+    border-left: 4px solid #1d6f42; /* Una barrita verde al costado le da el toque pro */
+    white-space: pre-line;     /* Respeta los saltos de línea del textarea */
+}
+
+        /* Cada respuesta es una "Card" */
+       .ficha-vecino { 
+    border: 1px solid #eee; 
+    padding: 15px; 
+    margin-bottom: 20px; 
+    border-radius: 6px;
+    page-break-inside: avoid; 
+}
+
+        .dato-linea { margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
+        .label { font-weight: bold; color: #1d6f42; font-size: 13px; text-transform: uppercase; }
+        .valor { font-size: 15px; margin-top: 4px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; }
+        
+        .firma-img { 
+            max-height: 120px; 
+            border: 1px solid #eee; 
+            background: #fafafa; 
+            display: block; 
+            margin-top: 10px;
+        }
+
+        /* Botón flotante para imprimir */
+        .btn-flotante {
+            position: fixed; bottom: 30px; right: 30px;
+            background: #1d6f42; color: white; border: none;
+            padding: 15px 25px; border-radius: 50px; font-weight: bold;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .hoja-pdf { box-shadow: none; max-width: 100%; padding: 0; }
+            .btn-flotante, .no-print { display: none; }
+        }

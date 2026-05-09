@@ -1,0 +1,129 @@
+
+
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+header h1 { color: #202124; margin-bottom: 5px; }
+header p { color: #5f6368; margin-top: 0; }
+
+.back-link a {
+    text-decoration: none;
+    color: #5f6368;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto; 
+    margin-top: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    /* 'fixed' obliga a las columnas a respetar el ancho y permite los '...' */
+    table-layout: fixed; 
+    background-color: #fff;
+}
+
+/* --- 3. Celdas (Cabeceras y Datos) --- */
+th, td {
+    text-align: left;
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+    /* Efecto de tres puntos (...) para textos largos */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Ancho por defecto para las columnas (ajustable) */
+th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- 4. Comportamiento de Filas y Celdas al pasar el mouse --- */
+tr:hover {
+    background-color: #f1f4f9;
+}
+
+/* Expandir texto al pasar el mouse para leer contenido cortado */
+td:hover:not(:has(.img-firma-tabla)) {
+    overflow: visible;
+    white-space: normal;
+    word-break: break-all;
+    background-color: #fff;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* --- 5. Firmas Digitales --- */
+/* Excepción: Las firmas NO deben tener '...' ni estar ocultas */
+td:has(.img-firma-tabla) {
+    overflow: visible;
+    white-space: normal;
+    text-align: center;
+}
+
+.img-firma-tabla {
+    max-width: 120px;
+    max-height: 45px; /* Altura compacta para no estirar la fila */
+    background-color: #fdfdfd;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto;
+    mix-blend-mode: multiply; /* Mezcla el trazo con el fondo de la celda */
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Efecto lupa para la firma */
+.img-firma-tabla:hover {
+    transform: scale(2.5);
+    z-index: 100;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background-color: #fff;
+}
+
+/* --- 6. Utilidades y Colores --- */
+.date-cell { 
+    color: #1a73e8; 
+    font-weight: 500; 
+    width: 140px; /* Ancho fijo para la fecha */
+}
+
+.empty { 
+    color: #ccc; 
+    font-style: italic; 
+}
+
+/* Botón Exportar */
+.btn-excel {
+    background-color: #1d6f42;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    float: right;
+}

@@ -1,0 +1,72 @@
+        body {
+            background-color: #f0ebf8; /* Fondo lila suave */
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container-gracias {
+            background-color: white;
+            width: 90%;
+            max-width: 480px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Barra de color superior estilo Google Forms */
+        .top-accent {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-color: #673ab7; /* Violeta institucional */
+        }
+
+        .icon-check {
+            font-size: 70px;
+            color: #2e7d32; /* Verde éxito */
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #202124;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 16px;
+            color: #5f6368;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: transparent;
+            color: #673ab7;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 24px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            transition: background 0.2s, border 0.2s;
+        }
+
+        .btn-volver:hover {
+            background-color: #f8f9fa;
+            border-color: #673ab7;
+        }
+
+        .btn-volver .material-icons {
+            font-size: 18px;
+        }

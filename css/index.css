@@ -1,0 +1,149 @@
+
+body{
+  font-family:Arial, Helvetica, sans-serif;
+  background:#def4ff;
+  color:#202124;
+  margin: 0;
+  padding: 0; 
+  min-height:100vh;
+}
+
+/* NAVBAR */
+.navbar{
+  width:100%;
+  border: none;
+  padding:18px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background: #2db7ef;
+  backdrop-filter:blur(10px);
+  box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+
+.logo{
+  font-size:26px;
+  font-weight:700;
+  color:#ffffff;
+}
+
+.navbar nav{
+  display:flex;
+  margin-left:60px;
+  margin-right:60px;
+   gap:15px;
+}
+
+.navbar a{
+  text-decoration:none;
+  background:#ffffff;
+  color:#2db7ef;
+  margin:10px;
+  font-weight:600;
+  padding:10px 16px;
+  border-radius:8px;
+  
+}
+
+.btn-nav{
+    text-decoration:none;
+    background:#ffffff;
+    color:#2db7ef;
+     margin:5px;
+    font-weight:600;
+    padding:10px 16px;
+    border-radius:8px;
+}
+
+
+
+/* HERO */
+.hero{
+  min-height:calc(100vh - 80px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:20px;
+}
+
+.hero-text{
+  max-width:700px;
+}
+
+.hero-text h1{
+  font-size:56px;
+  margin-bottom:18px;
+}
+
+.hero-text p{
+  font-size:19px;
+  color:#5f6368;
+  margin-bottom:28px;
+}
+
+.hero-buttons{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+
+.btn-primary,.btn-secondary{
+  padding:14px 22px;
+  border-radius:10px;
+  font-weight:700;
+  text-decoration:none;
+}
+
+.btn-primary{
+  background:#ffffff;
+  color:#2db7ef;
+  border:1px solid #ddd6fe;
+}
+
+.btn-secondary{
+  background:#ffffff;
+  color:#2db7ef;
+  border:1px solid #ddd6fe;
+}
+
+/* CARD */
+.hero-card{
+  margin-top:40px;
+  background:#fff;
+  padding:28px;
+  border-radius:18px;
+  box-shadow:0 15px 30px rgba(0,0,0,.08);
+  width:100%;
+  max-width:420px;
+}
+
+.hero-card h2{
+  margin-bottom:18px;
+}
+
+.hero-card input{
+  width:100%;
+  padding:12px;
+  margin-bottom:12px;
+  border:1px solid #ddd;
+  border-radius:8px;
+}
+
+.hero-card button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#2db7ef;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.hero-card button:hover{
+  opacity:.9;
+}
+
