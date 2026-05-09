@@ -46,7 +46,7 @@ function addQuestion(data = null) {
             </label>
             
             <div class="vertical-divider"></div>
-            <span class="material-icons btn-delete" onclick="this.closest('.form-card').remove()">delete_outline</span>
+            <span class="material-icons btn-delete" onclick="eliminarTarjeta(this)">delete_outline</span>
                 </div>
             </div>
         </div>
@@ -251,7 +251,6 @@ function capturarFormulario() {
         formulario.preguntas.push(infoPregunta);
     });
 
-    // --- EL CAMBIO ESTÁ AQUÍ ---
     fetch('../php/guardarFormulario.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -305,6 +304,7 @@ function copiarLink(url, boton) {
 function confirmarBorrado(id) {
     if(confirm('¿Estás seguro de que querés borrar este formulario? Se perderán todas las respuestas guardadas.')) {
         window.location.href = 'eliminarFormulario.php?id=' + id;
+
     }
 }
 
@@ -376,8 +376,6 @@ function actualizarFormulario() {
 
 function initSignatures() {
     const pads = document.querySelectorAll('.signature-pad');
-    console.log("Buscando firmas... Se encontraron: " + pads.length); 
-    
     pads.forEach(canvas => {
         const ctx = canvas.getContext('2d');
         const questionId = canvas.getAttribute('data-id');
@@ -390,13 +388,35 @@ function initSignatures() {
         ctx.lineJoin = "round";
         ctx.lineCap = "round";
 
+        
+    const ajustarResolucion = () => {
+    const containerWidth = canvas.parentElement.offsetWidth;
+    
+        // Si la pantalla es chica, lo ajustamos al ancho del celu
+        if (containerWidth < 600 && containerWidth > 0) {
+            canvas.width = containerWidth - 40; 
+            canvas.height = canvas.width / 2; // Mantenemos proporción
+        } else {
+            // En PC volvemos al tamaño grande
+            canvas.width = 600;
+            canvas.height = 300;
+        }
+    };
+
+ajustarResolucion();
+window.addEventListener('resize', ajustarResolucion);
         const getPos = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            // Soporte para Mouse (e.clientX) y Touch (e.touches)
-            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-            return { x, y };
-        };
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    return {
+        x: (clientX - rect.left) * scaleX,
+        y: (clientY - rect.top) * scaleY
+    };
+};
 
         const startDrawing = (e) => {
             drawing = true;
@@ -502,9 +522,100 @@ function moverPregunta(btn, direccion) {
             contenedor.insertBefore(siguiente, tarjeta);
         }
     }
+
+    actualizarNumerosDeSeccion();
     setActive(tarjeta);
 }
 
+function addSection(data = null) {
+    const container = document.getElementById('questions-container');
+    const card = document.createElement('div');
+    
+    card.className = 'form-card section-card';
+    card.onclick = function() { setActive(this); };
+
+    const titulo = data ? data.pregunta_texto : 'Sección sin título';
+
+    card.innerHTML = `
+        <div class="section-badge">SECCIÓN</div>
+        <div class="q-row">
+            <div class="q-inputs-group" style="width: 100%;">
+                <input type="text" class="q-text section-title-input" 
+                       placeholder="Título de la sección" value="${titulo}" 
+                       style="font-size: 20px; font-weight: 500; border-bottom: 2px solid #673ab7;">
+            </div>
+            <input type="hidden" class="q-type" value="seccion">
+        </div>
+        
+        <div class="card-footer">
+            <div class="footer-actions">
+                <span class="material-icons btn-move" onclick="moverPregunta(this, 'up')">arrow_upward</span>
+                <span class="material-icons btn-move" onclick="moverPregunta(this, 'down')">arrow_downward</span>
+                <div class="vertical-divider"></div>
+                <span class="material-icons btn-delete" onclick="eliminarTarjeta(this)">delete_outline</span>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(card);
+
+    actualizarNumerosDeSeccion();
+
+    setTimeout(() => {
+        setActive(card);
+    }, 10);
+}
+
+function eliminarTarjeta(btn) {
+    const card = btn.closest('.form-card');
+    const esSeccion = card.classList.contains('section-card');
+    
+    // Borramos la tarjeta del mapa
+    card.remove();
+
+    // Si era una sección, re-numeramos todas las que quedaron
+    if (esSeccion) {
+        actualizarNumerosDeSeccion();
+    }
+}
+
+
+function actualizarNumerosDeSeccion() {
+    const secciones = document.querySelectorAll('.section-card');
+    secciones.forEach((card, index) => {
+        const badge = card.querySelector('.section-badge');
+        if (badge) {
+            badge.innerText = `SECCIÓN ${index + 1}`;
+        }
+    });
+}
+
+
+function validarCamposPasoActual() {
+    // Buscamos todos los inputs requeridos en la página visible
+    const inputs = pages[currentPage].flatMap(card => Array.from(card.querySelectorAll('input[required], textarea[required], select[required]')));
+    
+    for (let input of inputs) {
+        // 1. Verificamos si está vacío
+        if (!input.value.trim()) {
+            alert("Por favor, completá todos los campos obligatorios.");
+            input.focus();
+            return false;
+        }
+
+        // 2. Verificamos si cumple con el 'pattern' (RegEx)
+        if (input.pattern) {
+            const regex = new RegExp(input.pattern);
+            if (!regex.test(input.value)) {
+                // Si falla, mostramos el mensaje que pusimos en el atributo 'title'
+                alert(input.title || "El formato de este campo no es válido.");
+                input.focus();
+                return false;
+            }
+        }
+    }
+    return true; 
+}
 
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', initSignatures);

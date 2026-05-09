@@ -146,16 +146,23 @@ form {
 }
 
 .signature-wrapper {
-    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra el canvas */
+    overflow: hidden;    /* Evita que nada sobresalga */
 }
 
 .signature-pad {
-    border: 1px solid #dadce0;
-    border-radius: 4px;
-    background-color: #f8f9fa;
-    cursor: crosshair;
+    display: block;
+    width: 100%;       /* Ocupa el ancho disponible de la tarjeta */
+    max-width: 600px;  /* Pero no más de su resolución nativa */
+    height: auto;      /* Mantiene la proporción 2:1 */
     touch-action: none;
-    max-width: 100%;
+    border: 1px solid #dadce0;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    cursor: crosshair;
 }
 
 .btn-clear {
@@ -172,3 +179,110 @@ form {
 .btn-clear:hover {
     color: #d93025;
 }
+
+
+
+.btn-return {
+    background-color: white;
+    color: #673ab7; /* El violeta que estás usando */
+    border: 1px solid #dadce0;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.btn-return:hover {
+    background-color: #f8f9fa;
+    border-color: #673ab7;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Para que los botones se vean alineados y con aire entre ellos */
+.nav-btns {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilo del botón Enviar/Siguiente (aseguramos consistencia) */
+.submit-btn {
+    background-color: #673ab7;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #5e35b1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.section-card-view {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border-top: 8px solid #673ab7; /* El toque Google Forms */
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.section-title-view {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 400;
+    color: #202124;
+}
+.corte-seccion {
+    background: white;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 8px;
+    border-top: 8px solid #673ab7; /* Solo la franja violeta arriba */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    margin-bottom: 20px;
+}
+
+.titulo-nueva-pagina {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 500;
+    color: #202124;
+}
+
+
+        .header-card, .question-card, .corte-seccion, .submit-btn { 
+            display: none; 
+        }
+        
+        .visible { 
+            display: block !important; 
+            animation: fadeIn 0.4s; 
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #nav-wrapper {
+            width: 100%;
+            max-width: 770px;
+            margin: 0 auto;
+        }
+
+
+
+/* Ocultamos todas las tarjetas por defecto */
+    .question-card, .section-title, .submit-btn { display: none; }
+    /* Solo se ven las que tienen la clase 'visible' */
+    .visible { display: block !important; animation: fadeIn 0.4s; }
+    
+    .nav-btns { margin-top: 20px; display: flex; gap: 10px; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

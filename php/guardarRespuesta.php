@@ -3,11 +3,18 @@ require_once '../config/conexion.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $formulario_id = intval($_POST['formulario_id']);
+    
+    // Capturamos los campos fijos del sistema
+    $nombre = $_POST['nombre'] ?? '';
+    $dni = $_POST['dni'] ?? '';
+    $tel = $_POST['telefono'] ?? '';
+
     $conexion->begin_transaction();
 
     try {
-        $stmtEnvio = $conexion->prepare("INSERT INTO envios (formulario_id) VALUES (?)");
-        $stmtEnvio->bind_param("i", $formulario_id);
+
+        $stmtEnvio = $conexion->prepare("INSERT INTO envios (formulario_id, nombre, dni, tel) VALUES (?, ?, ?, ?)");
+        $stmtEnvio->bind_param("isss", $formulario_id, $nombre, $dni, $tel);
         $stmtEnvio->execute();
         $envio_id = $conexion->insert_id;
 
@@ -29,7 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <html lang="es">
         <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>¡Gracias!</title>
+
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             <style>
                 body {
@@ -70,6 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <span class="material-icons icon">check_circle</span>
                 <h1>¡Gracias!</h1>
                 <p>Tu respuesta ha sido enviada correctamente.</p>
+                <p>Ya podes cerrar esta pagina.</p>
+
             </div>
         </body>
         </html>

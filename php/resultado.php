@@ -25,7 +25,7 @@ while ($row = $res_q->fetch_assoc()) {
 }
 
 // 3. Obtener todos los envíos (serán nuestras filas)
-$stmt_e = $conexion->prepare("SELECT id, fecha_envio FROM envios WHERE formulario_id = ? ORDER BY fecha_envio DESC");
+$stmt_e = $conexion->prepare("SELECT id, fecha_envio, nombre, dni, tel FROM envios WHERE formulario_id = ? ORDER BY fecha_envio DESC");
 $stmt_e->bind_param("i", $id_form);
 $stmt_e->execute();
 $res_e = $stmt_e->get_result();
@@ -87,6 +87,9 @@ while ($row = $res_r->fetch_assoc()) {
     <thead>
         <tr>
             <th>Fecha de Envío</th>
+            <th>Nombre</th>
+            <th>DNI</th>
+            <th>Teléfono</th>
             <?php foreach ($preguntas as $p): ?>
                 <!-- Solo mostramos el encabezado si la pregunta tiene texto -->
                 <th><?php echo htmlspecialchars($p['pregunta_texto']); ?></th>
@@ -94,41 +97,38 @@ while ($row = $res_r->fetch_assoc()) {
         </tr>
     </thead>
     <tbody>
-        <?php if (count($envios) > 0): ?>
-            <?php foreach ($envios as $envio): ?>
-                <tr>
-                    <td class="date-cell">
+    <?php if (count($envios) > 0): ?>
+                <?php foreach ($envios as $envio): ?>
+                    <tr>
+                        <td class="date-cell">
                             <a href="verDetalle.php?envio_id=<?php echo $envio['id']; ?>" style="text-decoration: none; color: inherit;">
                                 <?php echo date("d/m/Y H:i", strtotime($envio['fecha_envio'])); ?>
                                 <span class="material-icons" style="font-size: 14px;">visibility</span>
                             </a>
                         </td>
-                    
-                    <?php foreach ($preguntas as $p): ?>
-                        <td>
-                            <?php 
-
-
-                            if (isset($mapa_respuestas[$envio['id']][$p['id']])) {
-                                $valor = $mapa_respuestas[$envio['id']][$p['id']];
-
-                                // DETECCIÓN DE FIRMA: Si empieza con data:image, dibujamos la imagen
-                                if (strpos($valor, 'data:image') === 0) {
-                                    echo '<img src="' . $valor . '" class="img-firma-tabla" alt="Firma">';
-                                } else {
-                                    // Si es texto (DNI, Nombre, etc), lo mostramos normal
-                                    echo htmlspecialchars($valor);
-                                }
-                            } else {
-                                echo '<span class="empty">-</span>';
-                            }
-                            ?>
-                        </td>
-
                         
-                    <?php endforeach; ?>
-                </tr>
-            <?php endforeach; ?>
+                        <td><?php echo htmlspecialchars($envio['nombre']); ?></td>
+                        <td><?php echo htmlspecialchars($envio['dni']); ?></td>
+                        <td><?php echo htmlspecialchars($envio['tel']); ?></td>
+                        
+                        <?php foreach ($preguntas as $p): ?>
+                            <td>
+                                <?php 
+                                if (isset($mapa_respuestas[$envio['id']][$p['id']])) {
+                                    $valor = $mapa_respuestas[$envio['id']][$p['id']];
+                                    if (strpos($valor, 'data:image') === 0) {
+                                        echo '<img src="' . $valor . '" class="img-firma-tabla" alt="Firma">';
+                                    } else {
+                                        echo htmlspecialchars($valor);
+                                    }
+                                } else {
+                                    echo '<span class="empty">-</span>';
+                                }
+                                ?>
+                            </td>
+                        <?php endforeach; ?>
+                    </tr>
+                <?php endforeach; ?>
         <?php else: ?>
             <tr>
                 <td colspan="<?php echo count($preguntas) + 1; ?>" style="text-align: center; padding: 40px;">

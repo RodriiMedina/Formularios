@@ -90,3 +90,47 @@ body {
             font-size: 1.1em;
             font-weight: 500;
         }
+
+
+        /* --- RESPONSIVIDAD PARA EL DASHBOARD --- */
+@media screen and (max-width: 600px) {
+    
+    header {
+        margin-bottom: 30px;
+    }
+
+    h1 {
+        font-size: 2.2em; /* Bajamos el tamaño para que no ocupe 4 líneas */
+    }
+
+    .subtitle {
+        font-size: 1.1em;
+    }
+
+    .menu-grid {
+        /* Pasamos de 2 columnas a 1 sola */
+        grid-template-columns: 1fr; 
+        gap: 20px; /* Reducimos el espacio entre cards */
+    }
+
+    .menu-card {
+        padding: 25px; /* Menos padding interno para ganar espacio */
+        flex-direction: row; /* OPCIONAL: Los íconos al lado del texto */
+        justify-content: flex-start;
+        gap: 20px;
+    }
+
+    .icon {
+        font-size: 40px; /* Íconos un poco más discretos */
+        margin-bottom: 0;
+    }
+
+    .menu-card h3 {
+        font-size: 1.4em;
+        text-align: left;
+    }
+
+    .menu-card p {
+        display: none; /* Podés ocultar las descripciones cortas en móvil para limpiar la vista */
+    }
+}

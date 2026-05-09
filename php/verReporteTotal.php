@@ -4,14 +4,13 @@ require_once '../config/conexion.php';
 $id_form = intval($_GET['id'] ?? 0);
 if (!$id_form) die("ID de formulario no especificado.");
 
-// 1. Obtener información del formulario
 $stmt = $conexion->prepare("SELECT titulo, descripcion FROM formularios WHERE id = ?");
 $stmt->bind_param("i", $id_form);
 $stmt->execute();
 $form = $stmt->get_result()->fetch_assoc();
 
-// 2. Obtener todos los envíos de este formulario
-$stmt_e = $conexion->prepare("SELECT id, fecha_envio FROM envios WHERE formulario_id = ? ORDER BY fecha_envio ASC");
+// 1. ACTUALIZADO: Traemos nombre, dni y tel de envios
+$stmt_e = $conexion->prepare("SELECT id, fecha_envio, nombre, dni, tel FROM envios WHERE formulario_id = ? ORDER BY fecha_envio ASC");
 $stmt_e->bind_param("i", $id_form);
 $stmt_e->execute();
 $res_envios = $stmt_e->get_result();
@@ -35,34 +34,39 @@ $res_envios = $stmt_e->get_result();
         <h1>Reporte Completo</h1>
         <h2><?php echo htmlspecialchars($form['titulo']); ?></h2>
     </header>
+
     <?php if (!empty($form['descripcion'])): ?>
-        <div class="descripcion-texto">
+        <div class="descripcion-reporte">
             <?php echo nl2br(htmlspecialchars($form['descripcion'])); ?>
         </div>
     <?php endif; ?>
 
-    <p style="font-size: 14px; color: #888;">
-        respuestas totales recolectadas: <strong><?php echo $res_envios->num_rows; ?></strong>
+    <p style="font-size: 14px; color: #666; margin-bottom: 30px;">
+        Respuestas totales recolectadas: <strong><?php echo $res_envios->num_rows; ?></strong>
     </p>
 
     <?php 
     $numero_orden = 1; 
-    
     while ($envio = $res_envios->fetch_assoc()): 
     ?>
         <div class="ficha-vecino">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <!-- Reemplazamos $envio['id'] por nuestro contador -->
+            <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
                 <span style="color: #1d6f42; font-weight: bold;">
                     Orden: #<?php echo $numero_orden; ?>
                 </span>
-                <span style="color: #999;">
+                <span style="color: #999; font-size: 12px;">
                     <?php echo date("d/m/Y H:i", strtotime($envio['fecha_envio'])); ?>
                 </span>
             </div>
 
+            <div class="seccion-vecino">
+                <div class="dato-fijo"><strong>Nombre:</strong> <?php echo htmlspecialchars($envio['nombre']); ?></div>
+                <div class="dato-fijo"><strong>DNI:</strong> <?php echo htmlspecialchars($envio['dni']); ?></div>
+                <div class="dato-fijo"><strong>Teléfono:</strong> <?php echo htmlspecialchars($envio['tel']); ?></div>
+            </div>
+
             <?php
-            // Traer las respuestas (DNI, Nombre, Firma, etc.)
+            // Traer las respuestas dinámicas
             $stmt_res = $conexion->prepare("
                 SELECT p.pregunta_texto, r.respuesta_texto 
                 FROM respuestas r 
@@ -89,7 +93,6 @@ $res_envios = $stmt_e->get_result();
         </div>
 
     <?php 
-        // Incrementamos el contador para la siguiente ficha
         $numero_orden++; 
     endwhile; 
     ?>

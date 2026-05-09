@@ -90,9 +90,12 @@ $resultado = $conexion->query($sql);
                             <span class="material-icons">analytics</span>
                         </a>
 
-                        <a href="editarFormulario.php?id=<?php echo $f['id']; ?>" class="action-btn edit" title="Editar">
+
+                        
+                        <!-- <a href="editarFormulario.php?id=<?php echo $f['id']; ?>" class="action-btn edit" title="Editar">
                          <span class="material-icons">edit</span>
-                        </a>
+                        </a> -->
+                        
 
                         <button class="action-btn share" onclick="copiarLink('<?php echo $url_formulario; ?>', this)" title="Copiar Enlace">
                             <span class="material-icons">share</span>
