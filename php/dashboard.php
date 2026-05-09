@@ -61,13 +61,6 @@ $resultado = $conexion->query($sql);
             <span class="material-icons">add</span>
             <span>Nuevo Formulario</span>
         </a>
-
-        <div class="footer-actions">
-            <a href="logout.php" class="btn-logout">
-                <span class="material-icons">logout</span>
-                Cerrar Sesión
-            </a>
-        </div>
     </header>
 
     <div class="forms-grid">

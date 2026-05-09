@@ -313,6 +313,27 @@ input:checked + .slider:before {
     color: #202124;
 }
 
+.btn-move {
+    cursor: pointer;
+    color: #5f6368;
+    font-size: 20px;
+    padding: 5px;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-move:hover {
+    background-color: #f1f3f4;
+    color: #673ab7; /* El violeta que venimos usando */
+}
+
+/* Para que las flechas y el tacho de basura estén alineados */
+.footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 
 
 /* ICONOS Y OTROS */

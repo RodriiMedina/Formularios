@@ -30,14 +30,23 @@ function addQuestion(data = null) {
         </div>
         <div class="card-footer">
             <div class="footer-actions">
-                <span class="material-icons btn-delete" onclick="this.closest('.form-card').remove()">delete_outline</span>
-                <div class="vertical-divider"></div>
-                <div class="required-group">
-                    <span>Obligatoria</span>
-                    <label class="switch">
-                        <input type="checkbox" class="required-check" ${esObligatoria}>
-                        <span class="slider"></span>
-                    </label>
+
+            <span class="material-icons btn-move" onclick="moverPregunta(this, 'up')">arrow_upward</span>
+            <span class="material-icons btn-move" onclick="moverPregunta(this, 'down')">arrow_downward</span>
+
+            <div class="vertical-divider"></div>
+
+            
+            
+            <div class="required-group">
+            <span>Obligatoria</span>
+            <label class="switch">
+            <input type="checkbox" class="required-check" ${esObligatoria}>
+            <span class="slider"></span>
+            </label>
+            
+            <div class="vertical-divider"></div>
+            <span class="material-icons btn-delete" onclick="this.closest('.form-card').remove()">delete_outline</span>
                 </div>
             </div>
         </div>
@@ -50,10 +59,6 @@ function addQuestion(data = null) {
         } else {
             renderOptions(card.querySelector('.q-type'));
         }
-
-        // ESTO ES LO IMPORTANTE:
-        // Agregamos un pequeñísimo delay (0ms) para que el navegador 
-        // termine de renderizar la tarjeta y el 'offsetTop' sea exacto.
         setTimeout(() => {
             setActive(card);
         }, 10); 
@@ -481,7 +486,24 @@ function setActive(card) {
     }
 }
 
+function moverPregunta(btn, direccion) {
+    const tarjeta = btn.closest('.form-card');
+    const contenedor = document.getElementById('questions-container');
 
+    if (direccion === 'up') {
+        const anterior = tarjeta.previousElementSibling;
+        if (anterior) {
+            contenedor.insertBefore(tarjeta, anterior);
+        }
+    } else {
+        const siguiente = tarjeta.nextElementSibling;
+        if (siguiente) {
+            // insertAfter no existe nativamente, pero esto hace lo mismo:
+            contenedor.insertBefore(siguiente, tarjeta);
+        }
+    }
+    setActive(tarjeta);
+}
 
 
 // Ejecutar al cargar la página
