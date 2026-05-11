@@ -67,7 +67,7 @@ body {
         /* Botón flotante para imprimir */
         .btn-flotante {
             position: fixed; bottom: 30px; right: 30px;
-            background: #1d6f42; color: white; border: none;
+            background: #cc0a00 ; color: white; border: none;
             padding: 15px 25px; border-radius: 50px; font-weight: bold;
             cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }

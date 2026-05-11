@@ -1,14 +1,30 @@
-
-
-body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 20px;
+/* 1. VARIABLES Y BASE */
+:root {
+    --violeta-pro: #673ab7;
+    --sombra: 0 2px 10px rgba(0,0,0,0.1);
+    --bg-celeste: #f8f9fa;
+    --blanco: #ffffff;
+    --texto: #202124;
 }
 
-header h1 { color: #202124; margin-bottom: 5px; }
-header p { color: #5f6368; margin-top: 0; }
+body {
+    background-color: var(--bg-celeste); /* Fondo celeste original */
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    color: var(--texto);
+}
+
+/* 2. ENCABEZADO (Header Main) */
+.header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 25px;
+}
+
+header h1 { color: #202124; margin: 0 0 5px 0; }
+header p { color: #5f6368; margin: 0; }
 
 .back-link a {
     text-decoration: none;
@@ -17,114 +33,129 @@ header p { color: #5f6368; margin-top: 0; }
     align-items: center;
     gap: 5px;
     margin-bottom: 15px;
+    font-weight: 500;
 }
 
+/* 3. BOTONES (Sin Floats, usando Flex) */
+.group-btns {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-header {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    padding: 10px 18px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.btn-header:hover { transform: translateY(-2px); }
+
+/* 4. SECCIÓN DE FILTROS */
+.filter-section {
+    background: var(--blanco);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    box-shadow: var(--sombra);
+}
+
+.btn-accion-form {
+    background: var(--violeta-pro);
+    color: white;
+    border: none;
+    padding: 7px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+}
+
+/* 5. TABLA (Corregida) */
 .table-wrapper {
     width: 100%;
-    overflow-x: auto; 
-    margin-top: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    overflow-x: auto;
+    background: var(--blanco);
+    border-radius: 12px;
+    box-shadow: var(--sombra);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    /* 'fixed' obliga a las columnas a respetar el ancho y permite los '...' */
-    table-layout: fixed; 
-    background-color: #fff;
+    /* Quitamos table-layout: fixed para que las columnas se adapten al contenido */
+    min-width: 1000px; 
 }
 
-/* --- 3. Celdas (Cabeceras y Datos) --- */
 th, td {
     text-align: left;
-    padding: 10px 15px;
+    padding: 15px;
     border-bottom: 1px solid #eee;
     vertical-align: middle;
-    /* Efecto de tres puntos (...) para textos largos */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
-/* Ancho por defecto para las columnas (ajustable) */
 th {
     background-color: #f8f9fa;
-    color: #333;
-    font-weight: 600;
+    color: #5f6368;
+    font-weight: bold;
     font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
 }
 
-/* --- 4. Comportamiento de Filas y Celdas al pasar el mouse --- */
-tr:hover {
-    background-color: #f1f4f9;
-}
+/* Anchos específicos para columnas clave */
+.date-cell { width: 150px; color: var(--violeta-pro); font-weight: 600; }
+td:nth-child(2) { font-weight: 500; } /* Columna Nombre */
 
-/* Expandir texto al pasar el mouse para leer contenido cortado */
-td:hover:not(:has(.img-firma-tabla)) {
-    overflow: visible;
-    white-space: normal;
-    word-break: break-all;
-    background-color: #fff;
-    position: relative;
-    z-index: 10;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+tr:hover { background-color: #f8f5ff; }
 
-/* --- 5. Firmas Digitales --- */
-/* Excepción: Las firmas NO deben tener '...' ni estar ocultas */
-td:has(.img-firma-tabla) {
-    overflow: visible;
-    white-space: normal;
-    text-align: center;
-}
-
+/* 6. FIRMAS Y EFECTOS */
 .img-firma-tabla {
+    max-height: 45px;
     max-width: 120px;
-    max-height: 45px; /* Altura compacta para no estirar la fila */
-    background-color: #fdfdfd;
     border: 1px solid #eee;
     border-radius: 4px;
     display: block;
     margin: 0 auto;
-    mix-blend-mode: multiply; /* Mezcla el trazo con el fondo de la celda */
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.3s ease;
+    cursor: zoom-in;
 }
 
-/* Efecto lupa para la firma */
 .img-firma-tabla:hover {
-    transform: scale(2.5);
+    transform: scale(3);
     z-index: 100;
     position: relative;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    background-color: #fff;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    background: white;
 }
 
-/* --- 6. Utilidades y Colores --- */
-.date-cell { 
-    color: #1a73e8; 
-    font-weight: 500; 
-    width: 140px; /* Ancho fijo para la fecha */
+.empty {
+    color: #ccc;
+    font-style: italic;
+    font-size: 0.85rem;
 }
 
-.empty { 
-    color: #ccc; 
-    font-style: italic; 
+/* Estilo para los tres puntos si el texto es MUY largo */
+.text-truncate {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Botón Exportar */
-.btn-excel {
-    background-color: #1d6f42;
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: bold;
-    float: right;
+.text-truncate:hover {
+    white-space: normal;
+    overflow: visible;
+    position: relative;
+    background: white;
+    z-index: 1;
 }
-

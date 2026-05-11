@@ -30,8 +30,8 @@ if (isset($_SESSION['usuario_id'])) {
     echo "⚠️ <b>Sesión no detectada:</b> Si ya te logueaste, esto es un problema. Revisá el <code>session_start()</code>.<br>";
 }
 
-// 3. Verificación de Tablas y Columnas (Lo más importante)
-function chequear_tabla($conn, $tabla, $columnas_necesarias) {
+// 3. Verificación de Tablas y Columnas (Función Única y Corregida)
+function chequear_tabla(mysqli $conn, string $tabla, array $columnas_necesarias) {
     echo "<h3>2. Verificando tabla: <code>$tabla</code></h3>";
     $res = mysqli_query($conn, "SHOW TABLES LIKE '$tabla'");
     
@@ -56,10 +56,8 @@ function chequear_tabla($conn, $tabla, $columnas_necesarias) {
     }
 }
 
-// Chequeamos usuarios (ajustado a tu proyecto real)
+// Ejecución de chequeos (Fuera de la función)
 chequear_tabla($conexion, 'usuarios', ['id', 'usuario', 'password', 'rol']);
-
-// Chequeamos formularios (para ver por qué falla al crear)
 chequear_tabla($conexion, 'formularios', ['id', 'titulo', 'usuario_id']);
 
 // 4. Verificación de integridad de datos

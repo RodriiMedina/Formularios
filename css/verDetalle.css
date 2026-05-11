@@ -1,0 +1,113 @@
+:root {
+            --violeta-pro: #673ab7;
+            --bg-celeste: #def4ff;
+            --sombra: 0 1px 4px rgba(0,0,0,0.2);
+            --texto-principal: #202124;
+            --texto-secundario: #5f6368;
+        }
+
+        body {
+            background-color: var(--bg-celeste); /* Fondo celeste original */
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: var(--texto-principal);
+        }
+
+        .detalle-card {
+            background: white;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: var(--sombra);
+            border-top: 10px solid var(--violeta-pro); /* Identidad visual */
+        }
+
+        /* NAVEGACIÓN Y BOTONES */
+        .acciones-top {
+            display: flex;
+            justify-content: space-between; /* Volver a la izq, acciones a la der */
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-volver {
+            text-decoration: none;
+            color: var(--texto-secundario);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+
+        .grupo-botones {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-accion {
+            padding: 10px 16px;
+            border-radius: 6px;
+            border: 1px solid #dadce0;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-accion:hover { background: #f1f3f4; }
+        
+        .btn-delete {
+            color: #d93025;
+            border-color: #fce8e6;
+        }
+        .btn-delete:hover { background: #fce8e6; }
+
+        /* CONTENIDO */
+        h2 { margin: 0 0 10px 0; font-size: 24px; }
+        .fecha-envio { color: var(--texto-secundario); font-size: 14px; margin-bottom: 30px; }
+        hr { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
+
+        .item-respuesta {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #dadce0;
+            border-radius: 4px;
+        }
+
+        .pregunta {
+            font-weight: bold;
+            color: var(--texto-secundario);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .respuesta { font-size: 1.1rem; line-height: 1.5; }
+
+        .firma-grande {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+
+        /* RESPONSIVO */
+        @media screen and (max-width: 600px) {
+            .acciones-top { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .grupo-botones { width: 100%; justify-content: space-between; }
+        }
+
+        /* IMPRESIÓN */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; }
+            .detalle-card { box-shadow: none; border: none; width: 100%; }
+        }

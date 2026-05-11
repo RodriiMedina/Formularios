@@ -6,7 +6,7 @@ if (!$envio_id) die("ID de envío no válido.");
 
 // 1. Traer datos del envío y del formulario relacionado
 $stmt = $conexion->prepare("
-    SELECT e.fecha_envio, f.titulo 
+    SELECT e.id, e.formulario_id, e.fecha_envio, f.titulo 
     FROM envios e 
     JOIN formularios f ON e.formulario_id = f.id 
     WHERE e.id = ?
@@ -32,43 +32,35 @@ $respuestas = $stmt_res->get_result();
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Detalle de Respuesta - Compromiso Urbano</title>
-    <link rel="stylesheet" href="../css/resultado.css"> <!-- Reutilizamos tus estilos -->
-    <style>
-        .detalle-card {
-            background: white;
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .item-respuesta {
-            margin-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-        .pregunta { font-weight: bold; color: #5f6368; display: block; margin-bottom: 5px; }
-        .respuesta { font-size: 1.1rem; color: #202124; }
-        .firma-grande { 
-            max-width: 100%; 
-            border: 1px solid #ddd; 
-            margin-top: 10px;
-            background: #fafafa;
-        }
-        @media print { .no-print { display: none; } }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Respuesta</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../css/verDetalle.css"> 
+    <script src="../js/formularios.js" defer></script>
+
 </head>
 <body>
 
 <div class="detalle-card">
-    <div class="no-print" style="margin-bottom: 20px;">
-        <a href="javascript:history.back()">← Volver</a> | 
-        <button onclick="window.print()">Imprimir a PDF</button>
+    <div class="acciones-top no-print">
+        <a href="javascript:history.back()" class="btn-volver">
+            <span class="material-icons">arrow_back</span> Volver
+        </a>
+
+        <div class="grupo-botones">
+            <button onclick="window.print()" class="btn-accion btn-print">
+                <span class="material-icons">print</span> Imprimir a PDF
+            </button>
+            
+            <button onclick="confirmarEliminacion(<?php echo $info_envio['id']; ?>, <?php echo $info_envio['formulario_id']; ?>)" 
+                    class="btn-accion btn-delete">
+                <span class="material-icons">delete</span> Eliminar Registro
+            </button>
+        </div>
     </div>
 
     <h2>Respuesta para: <?php echo htmlspecialchars($info_envio['titulo']); ?></h2>
-    <p><strong>Fecha de envío:</strong> <?php echo $info_envio['fecha_envio']; ?></p>
+    <p class="fecha-envio"><strong>Fecha de envío:</strong> <?php echo $info_envio['fecha_envio']; ?></p>
     <hr>
 
     <?php while ($row = $respuestas->fetch_assoc()): ?>

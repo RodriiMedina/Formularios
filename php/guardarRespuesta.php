@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $conexion->commit();
         
-        // --- AQUÍ EMPIEZA EL HTML LINDO ---
         ?>
         <!DOCTYPE html>
         <html lang="es">
@@ -85,7 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </body>
         </html>
         <?php
-        // --- AQUÍ TERMINA EL HTML LINDO ---
 
     } catch (Exception $e) {
         $conexion->rollback();

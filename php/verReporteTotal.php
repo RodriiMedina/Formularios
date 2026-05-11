@@ -4,16 +4,39 @@ require_once '../config/conexion.php';
 $id_form = intval($_GET['id'] ?? 0);
 if (!$id_form) die("ID de formulario no especificado.");
 
-$stmt = $conexion->prepare("SELECT titulo, descripcion FROM formularios WHERE id = ?");
-$stmt->bind_param("i", $id_form);
-$stmt->execute();
-$form = $stmt->get_result()->fetch_assoc();
+// 1. Obtener información del título y descripción
+$stmt_f = $conexion->prepare("SELECT titulo, descripcion FROM formularios WHERE id = ?");
+$stmt_f->bind_param("i", $id_form);
+$stmt_f->execute();
+$form = $stmt_f->get_result()->fetch_assoc();
 
-// 1. ACTUALIZADO: Traemos nombre, dni y tel de envios
-$stmt_e = $conexion->prepare("SELECT id, fecha_envio, nombre, dni, tel FROM envios WHERE formulario_id = ? ORDER BY fecha_envio ASC");
-$stmt_e->bind_param("i", $id_form);
-$stmt_e->execute();
-$res_envios = $stmt_e->get_result();
+// 2. Lógica de Filtro (Recibimos desde la URL)
+$pregunta_id = intval($_GET['pregunta_filtro'] ?? 0);
+$valor_buscado = trim($_GET['valor_filtro'] ?? '');
+
+// Consulta base: Aquí es donde aplicamos el filtro
+$sql = "SELECT id, fecha_envio, nombre, dni, tel FROM envios WHERE formulario_id = ?";
+
+if ($pregunta_id > 0 && $valor_buscado !== '') {
+    $sql .= " AND id IN (
+        SELECT envio_id FROM respuestas 
+        WHERE pregunta_id = ? 
+        AND LOWER(respuesta_texto) LIKE LOWER(?)
+    )";
+}
+$sql .= " ORDER BY fecha_envio ASC"; // ASC para que el PDF salga en orden cronológico
+
+$stmt = $conexion->prepare($sql);
+
+if ($pregunta_id > 0 && $valor_buscado !== '') {
+    $like_val = "%$valor_buscado%";
+    $stmt->bind_param("iis", $id_form, $pregunta_id, $like_val);
+} else {
+    $stmt->bind_param("i", $id_form);
+}
+
+$stmt->execute();
+$resultado = $stmt->get_result(); // Esta es la variable que vamos a usar abajo
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +48,7 @@ $res_envios = $stmt_e->get_result();
 </head>
 <body>
 
-<button class="btn-flotante" onclick="window.print()">
+<button class="btn-flotante no-print" onclick="window.print()">
     Descargar PDF de todas las respuestas
 </button>
 
@@ -33,6 +56,9 @@ $res_envios = $stmt_e->get_result();
     <header class="header-reporte">
         <h1>Reporte Completo</h1>
         <h2><?php echo htmlspecialchars($form['titulo']); ?></h2>
+        <?php if ($pregunta_id > 0): ?>
+            <p style="color: #666; font-style: italic;">Filtro aplicado: "<?php echo htmlspecialchars($valor_buscado); ?>"</p>
+        <?php endif; ?>
     </header>
 
     <?php if (!empty($form['descripcion'])): ?>
@@ -42,12 +68,13 @@ $res_envios = $stmt_e->get_result();
     <?php endif; ?>
 
     <p style="font-size: 14px; color: #666; margin-bottom: 30px;">
-        Respuestas totales recolectadas: <strong><?php echo $res_envios->num_rows; ?></strong>
+        Respuestas encontradas con este criterio: <strong><?php echo $resultado->num_rows; ?></strong>
     </p>
 
     <?php 
     $numero_orden = 1; 
-    while ($envio = $res_envios->fetch_assoc()): 
+    // USAMOS $resultado EN LUGAR DE $res_envios
+    while ($envio = $resultado->fetch_assoc()): 
     ?>
         <div class="ficha-vecino">
             <div style="display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px;">
@@ -66,7 +93,7 @@ $res_envios = $stmt_e->get_result();
             </div>
 
             <?php
-            // Traer las respuestas dinámicas
+            // Traer las respuestas dinámicas de este envío
             $stmt_res = $conexion->prepare("
                 SELECT p.pregunta_texto, r.respuesta_texto 
                 FROM respuestas r 

@@ -617,6 +617,12 @@ function validarCamposPasoActual() {
     return true; 
 }
 
+function confirmarEliminacion(envioId, formId) {
+    if (confirm('¿Estás seguro de que querés eliminar este registro de Compromiso Urbano? Esta acción no se puede deshacer.')) {
+        window.location.href = 'eliminarEnvio.php?id=' + envioId + '&form_id=' + formId;
+    }
+}
+
 // Ejecutar al cargar la página
 document.addEventListener('DOMContentLoaded', initSignatures);
 window.addEventListener('load', initSignatures);
