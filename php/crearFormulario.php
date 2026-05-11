@@ -1,3 +1,15 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['usuario'])) {
+    header("Location: login.php");
+    exit();
+}
+
+$nombre_usuario = $_SESSION['usuario'];
+$rol_usuario = $_SESSION['rol']; // Para usarlo después si queremos ocultar botones
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>

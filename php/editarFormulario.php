@@ -1,5 +1,11 @@
-<?php
+ <?php
 require_once '../config/conexion.php';
+
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
 
 $id = intval($_GET['id'] ?? 0);
 if (!$id) { header("Location: dashboard.php"); exit; }
@@ -20,6 +26,7 @@ while ($fila = $res->fetch_assoc()) {
     $preguntas[] = $fila;
 }
 ?>
+<!--
 
 <!DOCTYPE html>
 <html lang="es">
@@ -72,4 +79,4 @@ while ($fila = $res->fetch_assoc()) {
             </a>
     </div>
 </body>
-</html>
+</html> -->
