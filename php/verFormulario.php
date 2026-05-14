@@ -80,11 +80,27 @@ $stmt->execute();
 $form = $stmt->get_result()->fetch_assoc();
 
 if ($form['estado'] == 1) {
-    echo "<div style='text-align:center; padding:50px; font-family:sans-serif;'>
-            <span class='material-icons' style='font-size:60px; color:#ccc;'>block</span>
-            <h2>Formulario Pausado</h2>
-            <p>Lo sentimos, este formulario ya no acepta más respuestas.</p>
-          </div>";
+    ?>
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../css/verFormulario.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <title>Formulario no disponible</title>
+    </head>
+    <body>
+        <div class="form-closed-wrapper">
+            <div class="form-closed-card">
+                <span class="material-icons form-closed-icon">block</span>
+                <h2>Formulario cerrado</h2>
+                <p>Lo sentimos, el administrador ha pausado este formulario y ya no acepta más respuestas.</p>
+            
+            </div>
+        </div>
+    </body>
+    </html>
+    <?php
     exit; 
 }
 
