@@ -277,6 +277,63 @@ form {
             margin: 0 auto;
         }
 
+        /* Pantalla de Formulario Cerrado/Pausado */
+.form-closed-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 20px;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.form-closed-card {
+    background: white;
+    padding: 60px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    max-width: 500px;
+    width: 100%;
+    border-top: 10px solid #673ab7; /* Gris oscuro para indicar pausa */
+}
+
+.form-closed-icon {
+    font-size: 80px;
+    color: #dadce0;
+    margin-bottom: 20px;
+}
+
+.form-closed-card h2 {
+    color: #202124;
+    font-size: 28px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.form-closed-card p {
+    color: #5f6368;
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+.btn-volver-home {
+    text-decoration: none;
+    color: #673ab7;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.2s;
+}
+
+.btn-volver-home:hover {
+    color: #512da8;
+    text-decoration: underline;
+}
+        
         
 
 
