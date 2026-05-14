@@ -8,49 +8,52 @@ function addQuestion(data = null) {
     const tipo = data ? data.tipo_pregunta : 'radio';
     const esObligatoria = (data && data.es_obligatoria == 1) ? 'checked' : '';
 
-    card.innerHTML = `
-        <div class="q-row">
-            <div class="q-inputs-group">
-                <input type="text" class="q-text" placeholder="Pregunta sin título" value="${preguntaTexto}">
-            </div>
-            <select class="q-type" onchange="renderOptions(this)">
-                <option value="text" ${tipo === 'text' ? 'selected' : ''}>Respuesta corta</option>
-                <option value="long_text" ${tipo === 'long_text' ? 'selected' : ''}>Respuesta larga</option>
-                <option value="radio" ${tipo === 'radio' ? 'selected' : ''}>Opción múltiple</option>
-                <option value="checkbox" ${tipo === 'checkbox' ? 'selected' : ''}>Casillas</option>
-                <option value="archivo" ${tipo === 'archivo' ? 'selected' : ''}>Archivo</option>
-                <option value="rating" ${tipo === 'rating' ? 'selected' : ''}>Calificación 1-5</option>
-                <option value="date" ${tipo === 'date' ? 'selected' : ''}>Fecha</option>
-                <option value="signature" ${tipo === 'signature' ? 'selected' : ''}>Firma Digital</option>
-            </select>
+card.innerHTML = `
+    <div class="q-row">
+        <div class="q-inputs-group">
+            <input type="text" class="q-text" placeholder="Pregunta sin título" value="${preguntaTexto}">
         </div>
-        <div class="options-area"></div>
-        <div class="action-zone" style="display:${['radio', 'checkbox'].includes(tipo) ? 'block' : 'none'}">
-            <span class="add-opt-btn" onclick="addOption(this)">+ Añadir opción</span>
-        </div>
-        <div class="card-footer">
-            <div class="footer-actions">
+        <select class="q-type" onchange="renderOptions(this)">
+            <option value="text" ${tipo === 'text' ? 'selected' : ''}>Respuesta corta</option>
+            <option value="long_text" ${tipo === 'long_text' ? 'selected' : ''}>Respuesta larga</option>
+            <option value="radio" ${tipo === 'radio' ? 'selected' : ''}>Opción múltiple</option>
+            <option value="checkbox" ${tipo === 'checkbox' ? 'selected' : ''}>Casillas</option>
+            <option value="archivo" ${tipo === 'archivo' ? 'selected' : ''}>Archivo</option>
+            <option value="rating" ${tipo === 'rating' ? 'selected' : ''}>Calificación 1-5</option>
+            <option value="date" ${tipo === 'date' ? 'selected' : ''}>Fecha</option>
+            <option value="signature" ${tipo === 'signature' ? 'selected' : ''}>Firma Digital</option>
+        </select>
+    </div>
+    
+    <div class="options-area"></div>
+    
+    <div class="action-zone" style="display:${['radio', 'checkbox'].includes(tipo) ? 'block' : 'none'}">
+        <span class="material-icons" style="color:#673ab7; font-size:18px; vertical-align:middle;">add</span>
+        <span class="add-opt-btn" onclick="addOption(this)" style="cursor:pointer; color:#777; font-size:14px; vertical-align:middle;">
+            Añadir opción
+        </span>
+    </div>
 
+    <div class="card-footer">
+        <div class="footer-actions">
             <span class="material-icons btn-move" onclick="moverPregunta(this, 'up')">arrow_upward</span>
             <span class="material-icons btn-move" onclick="moverPregunta(this, 'down')">arrow_downward</span>
 
             <div class="vertical-divider"></div>
 
-            
-            
             <div class="required-group">
-            <span>Obligatoria</span>
-            <label class="switch">
-            <input type="checkbox" class="required-check" ${esObligatoria}>
-            <span class="slider"></span>
-            </label>
-            
-            <div class="vertical-divider"></div>
-            <span class="material-icons btn-delete" onclick="eliminarTarjeta(this)">delete_outline</span>
-                </div>
+                <span>Obligatoria</span>
+                <label class="switch">
+                    <input type="checkbox" class="required-check" ${esObligatoria ? 'checked' : ''}>
+                    <span class="slider"></span>
+                </label>
+                
+                <div class="vertical-divider"></div>
+                <span class="material-icons btn-delete" onclick="eliminarTarjeta(this)">delete_outline</span>
             </div>
         </div>
-    `;
+    </div>
+`;
 
     container.appendChild(card);
 
@@ -149,26 +152,26 @@ function renderOptions(select) {
     }
 }
 
-// 3. Función para añadir una fila de opción (Radio/Checkbox)
-function addOption(btn, valor = "Opción") {
+
+function addOption(btn) {
     const card = btn.closest('.form-card');
     const area = card.querySelector('.options-area');
     const tipo = card.querySelector('.q-type').value;
+    const numero = area.querySelectorAll('.option-row').length + 1;
 
-    // Definimos el icono aquí para que no falle
     let icono = (tipo === 'checkbox') ? 'check_box_outline_blank' : 'radio_button_unchecked';
 
     const div = document.createElement('div');
     div.className = 'option-row';
     div.innerHTML = `
         <span class="material-icons" style="color:#ccc">${icono}</span>
-        <input type="text" class="opt-input" value="${valor}">
-        <span class="material-icons" onclick="this.parentElement.remove()" style="cursor:pointer">close</span>
+        <input type="text" class="opt-input" placeholder="Opción ${numero}" value="">
+        <span class="material-icons" onclick="this.parentElement.remove()" style="cursor:pointer; color:#777; font-size:18px;">close</span>
     `;
     area.appendChild(div);
 }
 
-// 4. Función estética para marcar cuál tarjeta está activa
+
 function setActive(card) {
     if (!card) return; // Seguridad extra
     document.querySelectorAll('.form-card').forEach(c => c.classList.remove('active'));

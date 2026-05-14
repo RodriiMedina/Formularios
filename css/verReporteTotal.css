@@ -44,25 +44,29 @@ body {
 }
 
         /* Cada respuesta es una "Card" */
-       .ficha-vecino { 
-    border: 1px solid #eee; 
-    padding: 15px; 
-    margin-bottom: 20px; 
-    border-radius: 6px;
-    page-break-inside: avoid; 
+   .ficha-vecino {
+    page-break-inside: avoid; /* Evita que la ficha se parta a la mitad entre dos hojas */
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    background: #fff;
+    width: 100%;
+    box-sizing: border-box; /* Asegura que el padding no sume al ancho total */
 }
 
-        .dato-linea { margin-bottom: 12px; border-bottom: 1px solid #f0f0f0; padding-bottom: 5px; }
+
         .label { font-weight: bold; color: #1d6f42; font-size: 13px; text-transform: uppercase; }
         .valor { font-size: 15px; margin-top: 4px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; }
         
-        .firma-img { 
-            max-height: 120px; 
-            border: 1px solid #eee; 
-            background: #fafafa; 
-            display: block; 
-            margin-top: 10px;
-        }
+    .firma-img {
+    display: block;
+    max-width: 200px;   /* Las firmas no necesitan ser gigantes */
+    height: auto;
+    border-bottom: 1px solid #ccc;
+    margin-top: 5px;
+    background: #fff;
+}
 
         /* Botón flotante para imprimir */
         .btn-flotante {
@@ -71,6 +75,76 @@ body {
             padding: 15px 25px; border-radius: 50px; font-weight: bold;
             cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+
+/* Ajuste de imágenes adjuntas en el reporte PDF */
+.reporte-img-adjunta {
+    display: block;
+    max-width: 100%;    /* Nunca será más ancha que su contenedor */
+    width: auto;        /* Mantiene la proporción */
+    max-height: 250px;  /* Evita que una foto vertical ocupe toda la hoja */
+    height: auto;
+    object-fit: contain; /* Ajusta la imagen sin deformarla */
+    border: 1px solid #eee;
+    border-radius: 6px;
+    background-color: #fafafa;
+    margin-top: 10px;
+}
+
+.archivo-adjunto-reporte {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #f8f9fa;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #e0e0e0;
+    font-size: 12px;
+    color: #555;
+    margin-top: 5px;
+}
+
+.hoja-pdf {
+    width: 100%;
+    max-width: 800px; /* Ancho estándar de una hoja A4 */
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+.ficha-vecino {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    page-break-inside: avoid;
+    box-sizing: border-box;
+    overflow: hidden; /* Esto corta cualquier desborde */
+}
+
+.reporte-img-adjunta {
+    display: block;
+    /* Forzamos el reescalado */
+    max-width: 500px !important; /* No permitimos que sea más ancha que esto */
+    width: 100%;                 /* Se adapta al ancho disponible hasta el tope de arriba */
+    height: auto;                /* Mantiene la proporción para que no se vea estirada */
+    max-height: 300px;           /* Si es muy alta (vertical), la frena acá */
+    
+    object-fit: contain;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+    background-color: #f9f9f9;
+}
+
+.dato-linea .valor {
+    margin-top: 5px;
+    width: 100%;
+    overflow: hidden; /* Corta cualquier cosa que intente salir */
+}
+
+
 
         @media print {
             body { background: white; padding: 0; }

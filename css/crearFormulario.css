@@ -487,6 +487,23 @@ input:checked + .slider:before {
     .q-text { font-size: 16px; background: transparent; }
 }
 
+.opt-input {
+    border: none;
+    border-bottom: 1px solid transparent;
+    padding: 8px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.opt-input:focus {
+    border-bottom: 1px solid #673ab7; /* El violeta pro cuando escribís */
+}
+
+.opt-input::placeholder {
+    color: #bbb;
+    font-weight: 400;
+}
+
 /*____________________________________________________ */
 
 /* ICONOS Y OTROS */

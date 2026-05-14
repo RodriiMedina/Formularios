@@ -1,5 +1,56 @@
 <?php
 require_once '../config/conexion.php'; 
+$directorio_subida = "../uploads/";
+
+// 2. Si la carpeta no existe, la creamos
+if (!file_exists($directorio_subida)) {
+    mkdir($directorio_subida, 0777, true);
+}
+
+// 3. Revisamos si el usuario subió un archivo
+// 'respuesta' sería el nombre (name) de tu input en el HTML
+if (isset($_FILES['respuesta'])) {
+    
+    $nombre_archivo = time() . "_" . $_FILES['respuesta']['name']; // Nombre único
+    $ruta_temporal = $_FILES['respuesta']['tmp_name']; // Donde está ahora (sala de espera)
+    $ruta_final = $directorio_subida . $nombre_archivo; // Donde va a vivir
+
+    // 4. MOVEMOS EL ARCHIVO
+    if (move_uploaded_file($ruta_temporal, $ruta_final)) {
+        // RECIÉN ACÁ el archivo está en tu carpeta uploads.
+        // Ahora, lo que guardás en la base de datos es el $nombre_archivo
+        $valor_para_db = $nombre_archivo;
+    }
+} else {
+    // Si no se subió ningún archivo, puedes decidir qué valor guardar en la base de datos
+    $valor_para_db = null; // O un string vacío, o lo que prefieras
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+    // Verificamos que el campo 'respuesta' exista y no tenga errores
+    if (isset($_FILES['respuesta']) && $_FILES['respuesta']['error'] === UPLOAD_ERR_OK) {
+        
+        $nombre_original = $_FILES['respuesta']['name'];
+        $ext = strtolower(pathinfo($nombre_original, PATHINFO_EXTENSION));
+        
+        $extensiones_permitidas = ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'];
+
+        if (in_array($ext, $extensiones_permitidas)) {
+            // Si el archivo es válido, acá va tu lógica de moverlo y guardar en DB
+            $nombre_seguro = time() . "_" . uniqid() . "." . $ext;
+            $destino = "../uploads/" . $nombre_seguro;
+            
+            if (move_uploaded_file($_FILES['respuesta']['tmp_name'], $destino)) {
+                $valor_para_db = $nombre_seguro;
+                // Acá hacés el INSERT o UPDATE en la base de datos
+            }
+        } else {
+            echo "Error: Tipo de archivo no permitido.";
+        }
+    }
+}
+
 
 if (!isset($_GET['id'])) {
     die("ID de formulario no especificado.");
@@ -22,6 +73,21 @@ $query_preguntas = $conexion->prepare("SELECT * FROM preguntas WHERE formulario_
 $query_preguntas->bind_param("i", $id_formulario);
 $query_preguntas->execute();
 $preguntas = $query_preguntas->get_result();
+
+$stmt = $conexion->prepare("SELECT titulo, descripcion, estado FROM formularios WHERE id = ?");
+$stmt->bind_param("i", $id_formulario);
+$stmt->execute();
+$form = $stmt->get_result()->fetch_assoc();
+
+if ($form['estado'] == 1) {
+    echo "<div style='text-align:center; padding:50px; font-family:sans-serif;'>
+            <span class='material-icons' style='font-size:60px; color:#ccc;'>block</span>
+            <h2>Formulario Pausado</h2>
+            <p>Lo sentimos, este formulario ya no acepta más respuestas.</p>
+          </div>";
+    exit; 
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -50,7 +116,7 @@ $preguntas = $query_preguntas->get_result();
         </div>
     </div>
 
-    <form action="guardarRespuesta.php" method="POST">
+    <form action="guardarRespuesta.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="formulario_id" value="<?php echo $id_formulario; ?>">
 
         <div class="question-card">

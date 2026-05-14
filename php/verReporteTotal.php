@@ -109,21 +109,42 @@ $resultado = $stmt->get_result(); // Esta es la variable que vamos a usar abajo
                 <div class="dato-linea">
                     <span class="label"><?php echo htmlspecialchars($r['pregunta_texto']); ?></span>
                     <div class="valor">
-                        <?php if (strpos($r['respuesta_texto'], 'data:image') === 0): ?>
-                            <img src="<?php echo $r['respuesta_texto']; ?>" class="firma-img">
-                        <?php else: ?>
-                            <?php echo htmlspecialchars($r['respuesta_texto']); ?>
+                        <?php 
+                        $valor = $r['respuesta_texto'];
+                        $extensiones_img = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                        $ext = strtolower(pathinfo($valor, PATHINFO_EXTENSION));
+                        $ruta_archivo = "../uploads/" . $valor;
+
+                        // 1. Si es una firma (Base64)
+                        if (strpos($valor, 'data:image') === 0): ?>
+                            <img src="<?php echo $valor; ?>" class="firma-img">
+
+                        <?php 
+                        // 2. Si es una imagen (DNI, Fotos, etc.)
+                        elseif (in_array($ext, $extensiones_img)): ?>
+                            <?php if (file_exists($ruta_archivo)): ?>
+                                <img src="<?php echo $ruta_archivo; ?>" class="reporte-img-adjunta">
+                            <?php else: ?>
+                                <span style="color: #d93025; font-size: 11px;">[Archivo no encontrado]</span>
+                            <?php endif; ?>
+
+                        <?php 
+                        // 3. Si es un archivo PDF/Documento
+                        elseif ($ext !== ''): ?>
+                            <div class="archivo-adjunto-reporte">
+                                <span class="material-icons" style="font-size: 16px;">attachment</span>
+                                Archivo: <?php echo htmlspecialchars($valor); ?>
+                            </div>
+
+                        <?php 
+                        // 4. Si es texto normal
+                        else: ?>
+                            <?php echo nl2br(htmlspecialchars($valor)); ?>
                         <?php endif; ?>
                     </div>
                 </div>
             <?php endwhile; ?>
         </div>
-
-    <?php 
-        $numero_orden++; 
-    endwhile; 
-    ?>
-</div>
-
+    <?php endwhile; ?>
 </body>
 </html>

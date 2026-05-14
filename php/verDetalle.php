@@ -62,19 +62,52 @@ $respuestas = $stmt_res->get_result();
     <h2>Respuesta para: <?php echo htmlspecialchars($info_envio['titulo']); ?></h2>
     <p class="fecha-envio"><strong>Fecha de envío:</strong> <?php echo $info_envio['fecha_envio']; ?></p>
     <hr>
+    <div class="respuestas-container">
+<?php while ($row = $respuestas->fetch_assoc()): ?>
+    <div class="item-respuesta">
+        <span class="pregunta"><?php echo htmlspecialchars($row['pregunta_texto']); ?></span>
+        <div class="respuesta">
+            <?php 
+            $valor = $row['respuesta_texto'];
+            $extensiones_img = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            $ext = strtolower(pathinfo($valor, PATHINFO_EXTENSION));
+            $ruta_archivo = "../uploads/" . $valor;
 
-    <?php while ($row = $respuestas->fetch_assoc()): ?>
-        <div class="item-respuesta">
-            <span class="pregunta"><?php echo htmlspecialchars($row['pregunta_texto']); ?></span>
-            <div class="respuesta">
-                <?php if (strpos($row['respuesta_texto'], 'data:image') === 0): ?>
-                    <img src="<?php echo $row['respuesta_texto']; ?>" class="firma-grande">
+            // 1. Si es una firma (Base64)
+            if (strpos($valor, 'data:image') === 0): ?>
+                <div class="contenedor-firma">
+                    <img src="<?php echo $valor; ?>" class="firma-grande">
+                </div>
+
+            <?php 
+            // 2. Si es una imagen subida (DNI, fotos, etc.)
+            elseif (in_array($ext, $extensiones_img)): ?>
+                <?php if (file_exists($ruta_archivo)): ?>
+                    <a href="<?php echo $ruta_archivo; ?>" target="_blank" title="Click para ver en tamaño original">
+                        <img src="<?php echo $ruta_archivo; ?>" class="imagen-adjunta">
+                    </a>
                 <?php else: ?>
-                    <?php echo htmlspecialchars($row['row_texto'] ?? $row['respuesta_texto']); ?>
+                    <span class="error-archivo">
+                        <span class="material-icons">error</span> Archivo no encontrado en el servidor.
+                    </span>
                 <?php endif; ?>
-            </div>
+
+            <?php 
+            // 3. Si es un documento (PDF, etc.)
+            elseif ($ext !== ''): ?>
+                <a href="<?php echo $ruta_archivo; ?>" target="_blank" class="btn-descarga-archivo">
+                    <span class="material-icons">description</span>
+                    Descargar <?php echo strtoupper($ext); ?> (<?php echo htmlspecialchars($valor); ?>)
+                </a>
+
+            <?php 
+            // 4. Si es texto normal
+            else: ?>
+                <p><?php echo nl2br(htmlspecialchars($valor)); ?></p>
+            <?php endif; ?>
         </div>
-    <?php endwhile; ?>
+    </div>
+<?php endwhile; ?>
 </div>
 
 </body>

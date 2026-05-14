@@ -7,8 +7,13 @@ if (!isset($_GET['id'])) {
 
 $id_form = intval($_GET['id']); 
 
-// 1. Obtener información del formulario
-$stmt = $conexion->prepare("SELECT titulo FROM formularios WHERE id = ?");
+// 1. Obtener información del formulario y su CREADOR
+$stmt = $conexion->prepare("
+    SELECT f.titulo, u.usuario as creador 
+    FROM formularios f 
+    JOIN usuarios u ON f.usuario_id = u.id 
+    WHERE f.id = ?
+");
 $stmt->bind_param("i", $id_form);
 $stmt->execute();
 $form = $stmt->get_result()->fetch_assoc();
@@ -25,14 +30,13 @@ while ($row = $res_q->fetch_assoc()) {
     $preguntas[] = $row;
 }
 
-// 3. Lógica de Filtro Dinámico (Corregida para Case Insensitivity y parámetros)
+// 3. Lógica de Filtro Dinámico
 $pregunta_id = intval($_GET['pregunta_filtro'] ?? 0);
 $valor_buscado = trim($_GET['valor_filtro'] ?? ''); 
 
 $sql = "SELECT id, fecha_envio, nombre, dni, tel FROM envios WHERE formulario_id = ?";
 
 if ($pregunta_id > 0 && $valor_buscado !== '') {
-    // Usamos LOWER para que coincida "Si", "si", "SI", etc.
     $sql .= " AND id IN (
         SELECT envio_id FROM respuestas 
         WHERE pregunta_id = ? 
@@ -45,7 +49,6 @@ $stmt_e = $conexion->prepare($sql);
 
 if ($pregunta_id > 0 && $valor_buscado !== '') {
     $like_val = "%$valor_buscado%";
-    // i = id_form, i = pregunta_id, s = valor_buscado
     $stmt_e->bind_param("iis", $id_form, $pregunta_id, $like_val);
 } else {
     $stmt_e->bind_param("i", $id_form);
@@ -54,7 +57,6 @@ $stmt_e->execute();
 $envios = $stmt_e->get_result();
 
 // 4. Obtener respuestas mapeadas [envio_id][pregunta_id]
-// Hacemos un JOIN con envios para filtrar solo las respuestas de este formulario
 $stmt_r = $conexion->prepare("
     SELECT r.envio_id, r.pregunta_id, r.respuesta_texto 
     FROM respuestas r
@@ -79,6 +81,12 @@ while ($row = $res_r->fetch_assoc()) {
     <link rel="stylesheet" href="../css/resultado.css">
     <link rel="stylesheet" href="../css/logout.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Estilos rápidos para archivos subidos */
+        .img-preview-tabla { max-width: 60px; border-radius: 4px; border: 1px solid #ddd; cursor: pointer; }
+        .file-link { display: flex; align-items: center; gap: 5px; text-decoration: none; color: #1a73e8; font-size: 13px; font-weight: 500; }
+        .file-link:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
 
@@ -91,6 +99,10 @@ while ($row = $res_r->fetch_assoc()) {
         <div class="header-main">
             <div>
                 <h1>Resultados de: <?php echo htmlspecialchars($form['titulo']); ?></h1>
+                <p style="color: var(--violeta-pro); font-weight: bold; margin-bottom: 5px; display: flex; align-items: center; gap: 5px;">
+                    <span class="material-icons" style="font-size: 18px;">person</span> 
+                    Creado por: <?php echo htmlspecialchars($form['creador']); ?>
+                </p>
                 <p>Mostrando <strong><?php echo $envios->num_rows; ?></strong> registros.</p> 
             </div>
             
@@ -171,19 +183,41 @@ while ($row = $res_r->fetch_assoc()) {
                             
                             <?php foreach ($preguntas as $p): ?>
                                 <td>
-                                    <?php 
-                                    if (isset($mapa_respuestas[$envio['id']][$p['id']])) {
-                                        $valor = $mapa_respuestas[$envio['id']][$p['id']];
-                                        if (strpos($valor, 'data:image') === 0) {
-                                            echo '<img src="' . $valor . '" class="img-firma-tabla" alt="Firma">';
-                                        } else {
-                                            echo htmlspecialchars($valor);
-                                        }
-                                    } else {
-                                        echo '<span class="empty">sin datos</span>';
-                                    }
-                                    ?>
-                                </td>
+    <?php 
+    if (isset($mapa_respuestas[$envio['id']][$p['id']])) {
+        $valor = $mapa_respuestas[$envio['id']][$p['id']];
+        $extensiones_img = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $ext = strtolower(pathinfo($valor, PATHINFO_EXTENSION));
+        
+        // IMPORTANTE: Definir bien la ruta relativa al archivo uploads
+        $ruta_archivo = "../uploads/" . $valor;
+
+        if (strpos($valor, 'data:image') === 0) {
+            echo '<img src="' . $valor . '" class="img-firma-tabla" alt="Firma">';
+        } elseif (in_array($ext, $extensiones_img)) {
+            // Verificamos si el archivo físico existe en la carpeta
+            if (file_exists($ruta_archivo)) {
+                echo '<a href="' . $ruta_archivo . '" target="_blank">
+                        <img src="' . $ruta_archivo . '" class="img-preview-tabla" title="Click para ampliar">
+                      </a>';
+            } else {
+                echo '<span style="color:#d93025; font-size:11px;">
+                        <span class="material-icons" style="font-size:12px;">error_outline</span> 
+                        No encontrado en /uploads
+                      </span>';
+            }
+        } elseif ($ext !== '') {
+            echo '<a href="' . $ruta_archivo . '" target="_blank" class="file-link">
+                    <span class="material-icons">description</span> Ver archivo
+                  </a>';
+        } else {
+            echo htmlspecialchars($valor);
+        }
+    } else {
+        echo '<span class="empty">sin datos</span>';
+    }
+    ?>
+</td>
                             <?php endforeach; ?>
                         </tr>
                     <?php endwhile; ?>
@@ -191,7 +225,7 @@ while ($row = $res_r->fetch_assoc()) {
                     <tr>
                         <td colspan="<?php echo count($preguntas) + 4; ?>" style="text-align: center; padding: 80px; color: #777;">
                             <span class="material-icons" style="font-size: 48px; display: block; margin-bottom: 15px; color: #ccc;">sentiment_dissatisfied</span>
-                            No se encontraron resultados para los criterios de búsqueda actuales.
+                            No se encontraron resultados.
                         </td>
                     </tr>
                 <?php endif; ?>
@@ -202,7 +236,7 @@ while ($row = $res_r->fetch_assoc()) {
 
 <div class="sidebar-footer" style="text-align:center; margin-top: 50px; padding-bottom: 20px;">
     <a href="logout.php" class="btn-logout" style="text-decoration:none; color:#d93025; font-weight: bold; font-size: 14px;">
-        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">logout</span> Cerrar Sesión Segura
+        <span class="material-icons" style="vertical-align: middle; font-size: 18px;">logout</span> Cerrar Sesión
     </a>
 </div>
 
